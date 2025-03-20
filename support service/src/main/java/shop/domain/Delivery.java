@@ -40,9 +40,7 @@ public class Delivery {
         return deliveryRepository;
     }
 
-    //<<< Clean Arch / Port Method
     public static void startDelivery(OrderPlaced orderPlaced) {
-        // 새로운 배송 정보 생성
         Delivery delivery = new Delivery();
         delivery.setOrderId(String.valueOf(orderPlaced.getId()));
         delivery.setAddress(orderPlaced.getAddress());
@@ -53,25 +51,20 @@ public class Delivery {
         
         repository().save(delivery);
 
-        // DeliveryStarted 이벤트 발행
         DeliveryStarted deliveryStarted = new DeliveryStarted(delivery);
         deliveryStarted.publishAfterCommit();
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
+
     public static void cancelDelivery(OrderCancelled orderCancelled) {
-        // 해당 주문의 배송 정보 찾기 및 처리
         repository().findByOrderId(String.valueOf(orderCancelled.getId())).ifPresent(delivery -> {
             delivery.setStatus("DELIVERY_CANCELLED");
             repository().save(delivery);
 
-            // DeliveryCancelled 이벤트 발행
             DeliveryCancelled deliveryCancelled = new DeliveryCancelled(delivery);
             deliveryCancelled.publishAfterCommit();
         });
     }
-    //>>> Clean Arch / Port Method
 
 }
 //>>> DDD / Aggregate Root

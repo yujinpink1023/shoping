@@ -21,6 +21,8 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String productId;
+
     private String name;
 
     private String price;
@@ -34,35 +36,25 @@ public class Inventory {
         return inventoryRepository;
     }
 
-    //<<< Clean Arch / Port Method
     public static void decreaseInventory(DeliveryStarted deliveryStarted) {
-        // 해당 상품의 재고 찾기 및 처리
         repository().findByProductId(deliveryStarted.getProductId()).ifPresent(inventory -> {
-            // 재고 감소
             inventory.setQty(inventory.getQty() - deliveryStarted.getQty());
             repository().save(inventory);
 
-            // InventoryDecreased 이벤트 발행
             InventoryDecreased inventoryDecreased = new InventoryDecreased(inventory);
             inventoryDecreased.publishAfterCommit();
         });
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
     public static void increaseInventory(DeliveryCancelled deliveryCancelled) {
-        // 해당 상품의 재고 찾기 및 처리
         repository().findByProductId(deliveryCancelled.getProductId()).ifPresent(inventory -> {
-            // 재고 증가
             inventory.setQty(inventory.getQty() + deliveryCancelled.getQty());
             repository().save(inventory);
 
-            // InventoryIncreased 이벤트 발행
             InventoryIncreased inventoryIncreased = new InventoryIncreased(inventory);
             inventoryIncreased.publishAfterCommit();
         });
     }
-    //>>> Clean Arch / Port Method
 
 }
 //>>> DDD / Aggregate Root

@@ -49,35 +49,27 @@ public class Order {
         return orderRepository;
     }
 
-    //<<< Clean Arch / Port Method
     public static void sendMail(InventoryIncreased inventoryIncreased) {
-        // 재고 증가 알림 메일 발송을 위한 주문 조회
-        repository().findByProductId(inventoryIncreased.getProductId()).ifPresent(order -> {
-            // 메일 발송 로직은 실제 구현 필요
+        repository().findById(inventoryIncreased.getId()).ifPresent(order -> {
             System.out.println("Sending mail for inventory increase: " + order.toString());
         });
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
+
     public static void updateStatus(DeliveryStarted deliveryStarted) {
-        // 배송 시작에 따른 주문 상태 업데이트
         repository().findById(Long.valueOf(deliveryStarted.getOrderId())).ifPresent(order -> {
             order.setStatus("DELIVERY_STARTED");
             repository().save(order);
         });
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
+
     public static void updateStatus(DeliveryCancelled deliveryCancelled) {
-        // 배송 취소에 따른 주문 상태 업데이트
         repository().findById(Long.valueOf(deliveryCancelled.getOrderId())).ifPresent(order -> {
             order.setStatus("DELIVERY_CANCELLED");
             repository().save(order);
         });
     }
-    //>>> Clean Arch / Port Method
 
 }
 //>>> DDD / Aggregate Root

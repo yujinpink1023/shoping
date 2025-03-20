@@ -12,10 +12,14 @@ import shop.infra.AbstractEvent;
 public class InventoryIncreased extends AbstractEvent {
 
     private Long id;
+    private String productId;
     private Integer qty;
 
     public InventoryIncreased(Inventory aggregate) {
         super(aggregate);
+        this.id = aggregate.getId();
+        this.productId = aggregate.getProductId();
+        this.qty = aggregate.getQty();
     }
 
     public InventoryIncreased() {
