@@ -51,76 +51,31 @@ public class Order {
 
     //<<< Clean Arch / Port Method
     public static void sendMail(InventoryIncreased inventoryIncreased) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Order order = new Order();
-        repository().save(order);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(inventoryIncreased.get???()).ifPresent(order->{
-            
-            order // do something
-            repository().save(order);
-
-
-         });
-        */
-
+        // 재고 증가 알림 메일 발송을 위한 주문 조회
+        repository().findByProductId(inventoryIncreased.getProductId()).ifPresent(order -> {
+            // 메일 발송 로직은 실제 구현 필요
+            System.out.println("Sending mail for inventory increase: " + order.toString());
+        });
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void updateStatus(DeliveryStarted deliveryStarted) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Order order = new Order();
-        repository().save(order);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(deliveryStarted.get???()).ifPresent(order->{
-            
-            order // do something
+        // 배송 시작에 따른 주문 상태 업데이트
+        repository().findById(Long.valueOf(deliveryStarted.getOrderId())).ifPresent(order -> {
+            order.setStatus("DELIVERY_STARTED");
             repository().save(order);
-
-
-         });
-        */
-
+        });
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void updateStatus(DeliveryCancelled deliveryCancelled) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Order order = new Order();
-        repository().save(order);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(deliveryCancelled.get???()).ifPresent(order->{
-            
-            order // do something
+        // 배송 취소에 따른 주문 상태 업데이트
+        repository().findById(Long.valueOf(deliveryCancelled.getOrderId())).ifPresent(order -> {
+            order.setStatus("DELIVERY_CANCELLED");
             repository().save(order);
-
-
-         });
-        */
-
+        });
     }
     //>>> Clean Arch / Port Method
 

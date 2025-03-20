@@ -36,59 +36,31 @@ public class Inventory {
 
     //<<< Clean Arch / Port Method
     public static void decreaseInventory(DeliveryStarted deliveryStarted) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Inventory inventory = new Inventory();
-        repository().save(inventory);
-
-        InventoryDecreased inventoryDecreased = new InventoryDecreased(inventory);
-        inventoryDecreased.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(deliveryStarted.get???()).ifPresent(inventory->{
-            
-            inventory // do something
+        // 해당 상품의 재고 찾기 및 처리
+        repository().findByProductId(deliveryStarted.getProductId()).ifPresent(inventory -> {
+            // 재고 감소
+            inventory.setQty(inventory.getQty() - deliveryStarted.getQty());
             repository().save(inventory);
 
+            // InventoryDecreased 이벤트 발행
             InventoryDecreased inventoryDecreased = new InventoryDecreased(inventory);
             inventoryDecreased.publishAfterCommit();
-
-         });
-        */
-
+        });
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void increaseInventory(DeliveryCancelled deliveryCancelled) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Inventory inventory = new Inventory();
-        repository().save(inventory);
-
-        InventoryIncreased inventoryIncreased = new InventoryIncreased(inventory);
-        inventoryIncreased.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(deliveryCancelled.get???()).ifPresent(inventory->{
-            
-            inventory // do something
+        // 해당 상품의 재고 찾기 및 처리
+        repository().findByProductId(deliveryCancelled.getProductId()).ifPresent(inventory -> {
+            // 재고 증가
+            inventory.setQty(inventory.getQty() + deliveryCancelled.getQty());
             repository().save(inventory);
 
+            // InventoryIncreased 이벤트 발행
             InventoryIncreased inventoryIncreased = new InventoryIncreased(inventory);
             inventoryIncreased.publishAfterCommit();
-
-         });
-        */
-
+        });
     }
     //>>> Clean Arch / Port Method
 

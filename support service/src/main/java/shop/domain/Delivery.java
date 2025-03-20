@@ -42,59 +42,34 @@ public class Delivery {
 
     //<<< Clean Arch / Port Method
     public static void startDelivery(OrderPlaced orderPlaced) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
+        // 새로운 배송 정보 생성
         Delivery delivery = new Delivery();
+        delivery.setOrderId(String.valueOf(orderPlaced.getId()));
+        delivery.setAddress(orderPlaced.getAddress());
+        delivery.setCustomerId(orderPlaced.getCustomerId());
+        delivery.setProductId(orderPlaced.getProductId());
+        delivery.setQty(orderPlaced.getQty());
+        delivery.setStatus("DELIVERY_STARTED");
+        
         repository().save(delivery);
 
+        // DeliveryStarted 이벤트 발행
         DeliveryStarted deliveryStarted = new DeliveryStarted(delivery);
         deliveryStarted.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(orderPlaced.get???()).ifPresent(delivery->{
-            
-            delivery // do something
-            repository().save(delivery);
-
-            DeliveryStarted deliveryStarted = new DeliveryStarted(delivery);
-            deliveryStarted.publishAfterCommit();
-
-         });
-        */
-
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void cancelDelivery(OrderCancelled orderCancelled) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Delivery delivery = new Delivery();
-        repository().save(delivery);
-
-        DeliveryCancelled deliveryCancelled = new DeliveryCancelled(delivery);
-        deliveryCancelled.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(orderCancelled.get???()).ifPresent(delivery->{
-            
-            delivery // do something
+        // 해당 주문의 배송 정보 찾기 및 처리
+        repository().findByOrderId(String.valueOf(orderCancelled.getId())).ifPresent(delivery -> {
+            delivery.setStatus("DELIVERY_CANCELLED");
             repository().save(delivery);
 
+            // DeliveryCancelled 이벤트 발행
             DeliveryCancelled deliveryCancelled = new DeliveryCancelled(delivery);
             deliveryCancelled.publishAfterCommit();
-
-         });
-        */
-
+        });
     }
     //>>> Clean Arch / Port Method
 
